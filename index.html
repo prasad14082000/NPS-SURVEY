@@ -380,15 +380,15 @@
       </div>
     </div>
 
-    <!-- Q3: Name + Phone (optional) -->
+    <!-- Q3: One thing we could do better -->
     <div class="card">
-      <div class="input-wrap">
-        <label for="name">Your Name <span style="color:#aaa;font-weight:400">(optional)</span></label>
-        <input type="text" id="name" name="name" placeholder="e.g. Rahul Sharma" />
-      </div>
-      <div class="input-wrap" style="margin-bottom:0">
-        <label for="phone">Mobile Number <span style="color:#aaa;font-weight:400">(optional)</span></label>
-        <input type="tel" id="phone" name="phone" placeholder="e.g. 9876543210" />
+      <div class="textarea-wrap">
+        <label for="improve">One thing we could do better?</label>
+        <textarea
+          id="improve"
+          name="improve"
+          placeholder="Your suggestion here..."
+        ></textarea>
       </div>
     </div>
 
@@ -476,8 +476,7 @@
     const data = {
       nps_score: document.getElementById('npsSlider').value,
       feedback: document.getElementById('feedback').value,
-      name: document.getElementById('name').value,
-      phone: document.getElementById('phone').value,
+      improve: document.getElementById('improve').value,
       timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
     };
 
