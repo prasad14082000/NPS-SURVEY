@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NPS Survey</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f5f2;
+      --card: #ffffff;
+      --accent: #2d6a4f;
+      --accent-light: #e8f5ee;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #e5e0d8;
+      --slider-track: #d1e8db;
+      --slider-thumb: #2d6a4f;
+      --success: #2d6a4f;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-top: 16px;
+    }
+    .header .badge {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 5vw, 34px);
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .header p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* Card */
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+      margin-bottom: 16px;
+    }
+
+    .question-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+    .question-label span { color: #e05a2b; }
+
+    /* Slider Section */
+    .slider-section { margin-bottom: 10px; }
+
+    .slider-value-display {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .slider-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 600;
+      color: var(--accent);
+      line-height: 1;
+      display: block;
+      transition: all 0.2s ease;
+    }
+    .slider-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+      display: block;
+      min-height: 20px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    /* Custom Slider */
+    .slider-track-wrap {
+      position: relative;
+      padding: 10px 0;
+    }
+    .slider-gradient-bg {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 10px;
+      transform: translateY(-50%);
+      border-radius: 10px;
+      background: linear-gradient(to right,
+        #d32f2f,   /* 1 - deep red */
+        #e53935,   /* 2 */
+        #f4511e,   /* 3 - red-orange */
+        #fb8c00,   /* 4 - orange */
+        #fdd835,   /* 5 - yellow */
+        #c0ca33,   /* 6 - yellow-green */
+        #7cb342,   /* 7 - light green */
+        #43a047,   /* 8 - medium green */
+        #2e7d32,   /* 9 - green */
+        #1b5e20    /* 10 - deep green */
+      );
+      pointer-events: none;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 10px;
+      background: transparent;
+      outline: none;
+      cursor: pointer;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--thumb-color, #fb8c00);
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      border: 3px solid #fff;
+      transition: transform 0.15s ease, background 0.3s ease, box-shadow 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:active {
+      transform: scale(1.25);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--thumb-color, #fb8c00);
+      cursor: pointer;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      transition: background 0.3s ease;
+    }
+    input[type="range"]::-moz-range-track {
+      background: transparent;
+      height: 10px;
+    }
+
+    .slider-endpoints {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .slider-endpoints span {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* Tick marks */
+    .slider-ticks {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2px;
+      margin-top: 6px;
+    }
+    .slider-ticks span {
+      font-size: 11px;
+      color: #aaa;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Textarea */
+    .textarea-wrap { margin-top: 4px; }
+    .textarea-wrap label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      resize: vertical;
+      min-height: 100px;
+      outline: none;
+      transition: border-color 0.2s;
+      background: var(--bg);
+    }
+    textarea:focus { border-color: var(--accent); background: #fff; }
+    textarea::placeholder { color: #bbb; }
+
+    /* Name field */
+    .input-wrap { margin-bottom: 16px; }
+    .input-wrap label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      background: var(--bg);
+    }
+    input[type="text"]:focus, input[type="tel"]:focus {
+      border-color: var(--accent);
+      background: #fff;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+    .submit-btn:hover { background: #235740; }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { background: #a0bfb1; cursor: not-allowed; }
+
+    /* Success state */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+    .success-screen .check-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .success-screen .check-icon svg { width: 28px; height: 28px; }
+    .success-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .success-screen p { color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+    /* Error message */
+    .error-msg {
+      color: #e05a2b;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+      text-align: center;
+    }
+
+    .required { color: #e05a2b; }
+
+    @media (max-width: 400px) {
+      .card { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">3-Month Check-in</div>
+    <h1>3 Months NPS Survey</h1>
+    <p>Your honest feedback helps us serve you better.<br/>Takes less than a minute.</p>
+  </div>
+
+  <!-- FORM -->
+  <form id="surveyForm">
+
+    <!-- Q1: NPS Slider -->
+    <div class="card">
+      <p class="question-label">
+        How likely are you to recommend us to your friends or family? <span>*</span>
+      </p>
+      <div class="slider-section">
+        <div class="slider-value-display">
+          <span class="slider-number" id="sliderNumber">5</span>
+          <span class="slider-label" id="sliderLabel">Neutral</span>
+        </div>
+        <div class="slider-track-wrap">
+          <div class="slider-gradient-bg"></div>
+          <input
+            type="range"
+            id="npsSlider"
+            name="nps_score"
+            min="1" max="10" value="5"
+            oninput="updateSlider(this)"
+            required
+          />
+        </div>
+        <div class="slider-ticks">
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+          <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+        </div>
+        <div class="slider-endpoints">
+          <span>😟 Not at all</span>
+          <span>Definitely 😊</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2: Open feedback -->
+    <div class="card">
+      <div class="textarea-wrap">
+        <label for="feedback">What's the main reason for your score?</label>
+        <textarea
+          id="feedback"
+          name="feedback"
+          placeholder="Tell us what went well or what we could improve..."
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Q3: Name + Phone (optional) -->
+    <div class="card">
+      <div class="input-wrap">
+        <label for="name">Your Name <span style="color:#aaa;font-weight:400">(optional)</span></label>
+        <input type="text" id="name" name="name" placeholder="e.g. Rahul Sharma" />
+      </div>
+      <div class="input-wrap" style="margin-bottom:0">
+        <label for="phone">Mobile Number <span style="color:#aaa;font-weight:400">(optional)</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="e.g. 9876543210" />
+      </div>
+    </div>
+
+    <p class="error-msg" id="errorMsg">Something went wrong. Please try again.</p>
+    <button type="submit" class="submit-btn" id="submitBtn">Submit Feedback</button>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="check-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <h2>Thank you! 🙏</h2>
+    <p>Your feedback has been recorded.<br/>We truly appreciate you taking the time.</p>
+  </div>
+
+</div>
+
+<script>
+  // =============================================
+  // STEP 1: Replace this URL with your Google
+  // Apps Script Web App URL (see instructions)
+  // =============================================
+  const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE";
+
+  // Color map for each score 1–10
+  const colors = {
+    1:  "#d32f2f",
+    2:  "#e53935",
+    3:  "#f4511e",
+    4:  "#fb8c00",
+    5:  "#fdd835",
+    6:  "#c0ca33",
+    7:  "#7cb342",
+    8:  "#43a047",
+    9:  "#2e7d32",
+    10: "#1b5e20"
+  };
+
+  // Slider labels
+  const labels = {
+    1: "Not at all", 2: "Very Unlikely", 3: "Unlikely",
+    4: "Somewhat Unlikely", 5: "Neutral", 6: "Somewhat Likely",
+    7: "Likely", 8: "Very Likely", 9: "Almost Definitely", 10: "Definitely!"
+  };
+
+  function updateSlider(el) {
+    const val = parseInt(el.value);
+    const color = colors[val];
+
+    // Update thumb color via CSS variable
+    el.style.setProperty('--thumb-color', color);
+
+    // Update the big number color
+    const numEl = document.getElementById('sliderNumber');
+    numEl.textContent = val;
+    numEl.style.color = color;
+
+    // Update label
+    document.getElementById('sliderLabel').textContent = labels[val];
+
+    // Update submit button color
+    const btn = document.getElementById('submitBtn');
+    btn.style.background = color;
+
+    // Update card left-border accent
+    el.closest('.card').style.borderLeft = `4px solid ${color}`;
+  }
+
+  // Init on load
+  updateSlider(document.getElementById('npsSlider'));
+
+  // Form submission
+  document.getElementById('surveyForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const errMsg = document.getElementById('errorMsg');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    errMsg.style.display = 'none';
+
+    const data = {
+      nps_score: document.getElementById('npsSlider').value,
+      feedback: document.getElementById('feedback').value,
+      name: document.getElementById('name').value,
+      phone: document.getElementById('phone').value,
+      timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    };
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      // Show success (no-cors won't give us response status, assume success)
+      document.getElementById('surveyForm').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } catch (err) {
+      errMsg.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Submit Feedback';
+    }
+  });
+</script>
+</body>
+</html>
