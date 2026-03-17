@@ -49,20 +49,13 @@
       display: inline-block;
       background: var(--accent-light);
       color: var(--accent);
-      font-size: 11px;
+      font-size: 16px;
       font-weight: 600;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      padding: 5px 14px;
+      padding: 10px 22px;
       border-radius: 20px;
       margin-bottom: 16px;
-    }
-    .header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(26px, 5vw, 34px);
-      color: var(--text);
-      line-height: 1.2;
-      margin-bottom: 10px;
     }
     .header p {
       color: var(--muted);
@@ -329,7 +322,6 @@
 
   <div class="header">
     <div class="badge">3-Month Check-in</div>
-    <h1>3 Months NPS Survey</h1>
     <p>Your honest feedback helps us serve you better.<br/>Takes less than a minute.</p>
   </div>
 
@@ -371,7 +363,7 @@
     <!-- Q2: Open feedback -->
     <div class="card">
       <div class="textarea-wrap">
-        <label for="feedback">What's the main reason for your score?</label>
+        <label for="feedback">What's the main reason for your score? <span style="color:#aaa;font-weight:400">(optional)</span></label>
         <textarea
           id="feedback"
           name="feedback"
@@ -383,7 +375,7 @@
     <!-- Q3: One thing we could do better -->
     <div class="card">
       <div class="textarea-wrap">
-        <label for="improve">One thing we could do better?</label>
+        <label for="improve">One thing we could do better? <span style="color:#aaa;font-weight:400">(optional)</span></label>
         <textarea
           id="improve"
           name="improve"
@@ -415,7 +407,7 @@
   // STEP 1: Replace this URL with your Google
   // Apps Script Web App URL (see instructions)
   // =============================================
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPyz8Fbe9lJNvI-BZUYuq7ijefPumyZNNYkNWyXIlMdiQSmC4Ij0fEnDKPudDR7C2W/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxlOMEAs1C32tD-Kj4_7R04U_IhvUjlsuxcndmMI0QcOZn1WGjzqXRccRpdfSR7jo8P/exec";
 
   // Color map for each score 1–10
   const colors = {
