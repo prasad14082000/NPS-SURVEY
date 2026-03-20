@@ -128,11 +128,22 @@
     <h2>Thank you! 🙏</h2>
     <p>Your feedback has been recorded.<br/>We truly appreciate your time.</p>
   </div>
+
+  <div class="already-screen" id="alreadyScreen">
+    <div class="icon">✅</div>
+    <h2>Already Submitted!</h2>
+    <p>You have already filled this form.<br/>Thank you for your feedback!</p>
+  </div>
 </div>
 
 <script>
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7Y2FkY6mk_sfO2K59HOCJyOTcIj4_sLwvw-cQamg_d_vL9hY9OxWp_oBJycdeKgN0/exec";
+  const FORM_KEY = 'hhc_submitted_discharge';
 
+  if (localStorage.getItem(FORM_KEY)) {
+    document.getElementById('surveyForm').style.display = 'none';
+    document.getElementById('alreadyScreen').style.display = 'block';
+  }
   const ratings = { billing: null, discharge: null };
 
   function selectRating(btn, field, level) {
@@ -166,6 +177,7 @@
 
     try {
       await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      localStorage.setItem(FORM_KEY, 'true');
       document.getElementById('surveyForm').style.display = 'none';
       document.getElementById('successScreen').style.display = 'block';
     } catch (err) {
